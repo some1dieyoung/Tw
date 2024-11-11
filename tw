@@ -1,0 +1,54 @@
+package org.example;
+
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Main {
+    public static void main(String[] args) {
+
+        System.out.println("Ввод строки: ");
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine().replace(" ", "");
+
+        try {
+            String result = calc(input);
+            System.out.println(result);
+
+        } catch (ArithmeticException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+    public static String calc(String input) {
+        String regex = "(\\d+)(\\W)(\\d+)";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+
+
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Неверный ввод");
+        }
+
+        int firstNum = Integer.parseInt(matcher.group(1));
+        String operator = matcher.group(2);
+        int secondNum = Integer.parseInt(matcher.group(3));
+
+
+        if (firstNum < 1 || firstNum > 10 || secondNum < 1 || secondNum > 10) {
+            throw new IllegalArgumentException("число должно быть от 1 до 10 ");
+        }
+
+
+        int result;
+        result = switch (operator) {
+            case "+" -> firstNum + secondNum;
+            case "-" -> firstNum - secondNum;
+            case "*" -> firstNum * secondNum;
+            case "/" -> firstNum / secondNum;
+            default -> throw new IllegalArgumentException("неверная операция");
+        };
+        return String.valueOf(result);
+    }
+}
